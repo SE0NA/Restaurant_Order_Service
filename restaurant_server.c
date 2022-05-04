@@ -12,9 +12,7 @@
  *  
  *  3. 주문 내역은 동적 리스트로 저장
  *
- *   +) 추가 기능
- *     절차적 수행이라 서버 기능과 주문 내역 관리가 동시에 이루어지기 어려움.
- *     따라서, 서버 기능과 주문 내역 관리 기능을 Thread로 관리할 필요 있음. (고려)
+ *   +) 다중 사용자 접속이 가능하도록 하여야 함!
  */
 
 #include <stdio.h>
@@ -64,7 +62,7 @@ int main(int argc, char** argv){
 	}
 
 	// listen() 
-	if(listen(server_sock, 5) < 0){
+	if(listen(server_sock, 10) < 0){
 		peeror("listen error");
 		exit(1);
 	}
@@ -79,6 +77,9 @@ int main(int argc, char** argv){
 			perror("socket accept error\n");
 			exit(1);
 		}
+
+		// fork() : 다중 클라이언트 접속
+
 		write(client_sock, menu, sizeof(menu));
 		
 
