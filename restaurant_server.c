@@ -140,14 +140,11 @@ int main(int argc, char** argv){
 				orderlist_t-> next = NULL;
 			}
 
-			if(n = read(client_sock, neworder, sizeof(order))<0){
-				printf("read 오류!\n");
-				close(client_sock);
-				exit(0);
-			}
-			
+			n = read(client_sock, neworder, sizeof(order));
+			printf("read\n");
+					
 			neworder->no = ++request_num;
-			printf("%d %d %s\n", neworder->no, neworder->list[0], neworder->name);
+			printf("%d %s\n", neworder->no, neworder->name);
 
 			// 3) get order in orderlist
 
