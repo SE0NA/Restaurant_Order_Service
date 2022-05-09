@@ -67,12 +67,6 @@ int main(int argc, char** argv){
 	server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	server_addr.sin_port = htons(atoi(argv[1]));
 
-	// mymenu 데이터 동적 할당
-	mymenu.menu_cost = (int*)malloc(sizeof(int)*mymenu.menu_len);
-	mymenu.menu_str = (char**)malloc(sizeof(char*)*mymenu.menu_len);
-	for(int i=0;i<mymenu.menu_len;i++)
-		mymenu.menu_str[i] = (char*)malloc(sizeof(char)*30);
-
 	// 메뉴 내용 입력
 	strcpy(mymenu.cost_str, "15000@12000@13000@9000");
 	strcpy(mymenu.menu_str, "핫불고기 피자@새우 피자@콤비네이션 피자@예지 피자");
