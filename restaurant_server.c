@@ -35,7 +35,7 @@ int main(int argc, char** argv){
 
 	int str_len;
 	int request_num;
-	char[BUF] msg;
+	char msg[BUF];
 
 	pid_t pid;
 	int state;
@@ -75,7 +75,7 @@ int main(int argc, char** argv){
 	mymenu.menu_cost[0] = 15000;
 	mymenu.menu_cost[1] = 12000;
 	mymenu.menu_cost[2] = 13000;
-	mymenu.menu_cose[3] = 9000;
+	mymenu.menu_cost[3] = 9000;
 
 	strcpy(mymenu.menu_str[0], "핫불고기 피자");
 	strcpy(mymenu.menu_str[1], "새우 피자");
@@ -91,14 +91,14 @@ int main(int argc, char** argv){
 
 	// listen() 
 	if(listen(server_sock, 10) < 0){
-		peeror("listen error");
+		perror("listen error");
 		exit(1);
 	}
 
 	// clients accept -> fork()
 	while(1){
 		// connect() -> send menu to client
-		client_addr_size = sizeof(cient_addr);
+		client_addr_size = sizeof(client_addr);
 		client_sock = accept(server_sock, (struct sockaddr*)&client_addr, &client_addr_size);
 		if(client_sock < 0){		// connect error
 			continue;
@@ -122,7 +122,7 @@ int main(int argc, char** argv){
 
 			// communication with a client
 			// 1) send menu to client
-			write(client_sock, menu, sizeof(menu));
+			write(client_sock, (void*)&mymenu, sizeof(menu));
 
 			// 2) read order from client
 			
