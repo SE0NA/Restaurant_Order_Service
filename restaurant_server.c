@@ -26,8 +26,6 @@
 
 #define BUF 1024
 
-void setMenuData(menu*);
-
 int main(int argc, char** argv){
 	int server_sock;
 	int client_sock;
@@ -68,7 +66,22 @@ int main(int argc, char** argv){
 	server_addr.sin_port = htons(atoi(argv[1]));
 
 	// mymenu 데이터 동적 할당
-	setMenuData(&mymenu);
+	mymenu.menu_cost = (int*)malloc(sizeof(int)*mymenu.menu_len);
+	mymenu.menu_str = (char**)malloc(sizeof(char*)*mymenu.menu_len);
+	for(int i=0;i<mymenu.menu_len;i++)
+		mymenu.menu_str[i] = (char*)malloc(sizeof(char)*30);
+
+	// 메뉴 내용 입력
+	mymenu.menu_cost[0] = 15000;
+	mymenu.menu_cost[1] = 12000;
+	mymenu.menu_cost[2] = 13000;
+	mymenu.menu_cose[3] = 9000;
+
+	strcpy(mymenu.menu_str[0], "핫불고기 피자");
+	strcpy(mymenu.menu_str[1], "새우 피자");
+	strcpy(mymenu.menu_str[2], "콤비네이션 피자");
+	strcpy(mymenu.menu_str[3], "예지 피자");
+
 
 	// bind()
 	if(bind(server_sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0){
@@ -87,11 +100,12 @@ int main(int argc, char** argv){
 		// connect() -> send menu to client
 		client_addr_size = sizeof(cient_addr);
 		client_sock = accept(server_sock, (struct sockaddr*)&client_addr, &client_addr_size);
-		if(client_sock < 0){
+		if(client_sock < 0){		// connect error
 			continue;
 		}
 
-		if((pid = fork())<0){		// error
+		// fork()
+		if((pid = fork())<0){		// fork error
 			close(client_sock);
 			continue;
 		}
@@ -104,28 +118,22 @@ int main(int argc, char** argv){
 
 		else{				// child process
 			close(server_sock);
+			puts(" ** child process\n");
 
 			// communication with a client
-			while((
+			// 1) send menu to client
+			write(client_sock, menu, sizeof(menu));
+
+			// 2) read order from client
+			
+
+			// 3) get order in orderlist
+
+
+			// 4) print UI with new orderlist
 		}
-
-
-		write(client_sock, menu, sizeof(menu));
 		
-
-		// 주문 대기
-			// 1. read로 클라이언트 소켓에서 order 내용 입력받기 -> neworder
-			// 2. neworder를 리스트에 넣기
-			// 3. 화면에 새로운 주문 내역 출력
-		
-		
-
 		// close()
 		close(client_sock);
 	}		
-}
-
-void setMenuData(meun* m){
-	m.menu_cost = (int*)malloc(sizeof(int)*m.menu_len);
-	m.menu_str = (char**)malloc(sizeof(char*)*m.menu_len);
 }
