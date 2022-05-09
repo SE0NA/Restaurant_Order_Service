@@ -26,6 +26,8 @@
 
 #define BUF 1024
 
+void setMenuData(menu*);
+
 int main(int argc, char** argv){
 	int server_sock;
 	int client_sock;
@@ -37,18 +39,22 @@ int main(int argc, char** argv){
 	int request_num;
 	char[BUF] msg;
 
+	pid_t pid;
+	int state;
+
+	// order
+	order* orderlist_h;
+	order* orderlist_t;
+
+	// menu 구조체 데이터 선언
 	menu mymenu;
 	mymenu.menu_len = 4;
-
-
-
-	// order list 동적 리스트 필요(order 구조체 작성 완료후)
 
 	if(argc != 2){
 		printf("Usage: %s <port>\n", argv[0]);
 		exit(1);
 	}
-	
+
 	// socket()
 	server_sock = socket(PF_INET, SOCK_STREAM, 0);
 	if(server_sock < 0){
@@ -60,6 +66,9 @@ int main(int argc, char** argv){
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	server_addr.sin_port = htons(atoi(argv[1]));
+
+	// mymenu 데이터 동적 할당
+	setMenuData(&mymenu);
 
 	// bind()
 	if(bind(server_sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0){
@@ -73,18 +82,33 @@ int main(int argc, char** argv){
 		exit(1);
 	}
 
-	client_addr_size = sizeof(client_addr);
-
-	// function
+	// clients accept -> fork()
 	while(1){
 		// connect() -> send menu to client
+		client_addr_size = sizeof(cient_addr);
 		client_sock = accept(server_sock, (struct sockaddr*)&client_addr, &client_addr_size);
 		if(client_sock < 0){
-			perror("socket accept error\n");
-			exit(1);
+			continue;
 		}
 
-		// fork() : 다중 클라이언트 접속
+		if((pid = fork())<0){		// error
+			close(client_sock);
+			continue;
+		}
+
+		else if( pid > 0){		// parent process
+			puts("클라이언트 접속으로 child 생성 -> for test\n");
+			close(client_sock);
+			continue;
+		}
+
+		else{				// child process
+			close(server_sock);
+
+			// communication with a client
+			while((
+		}
+
 
 		write(client_sock, menu, sizeof(menu));
 		
@@ -99,4 +123,9 @@ int main(int argc, char** argv){
 		// close()
 		close(client_sock);
 	}		
+}
+
+void setMenuData(meun* m){
+	m.menu_cost = (int*)malloc(sizeof(int)*m.menu_len);
+	m.menu_str = (char**)malloc(sizeof(char*)*m.menu_len);
 }

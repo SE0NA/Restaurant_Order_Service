@@ -4,6 +4,7 @@ typedef struct order{
 	char[20] phone;	// 주문자 휴대번호(클라이언트)
 	char[30] add;	// 주문 배송지(클라이언트)
 	int** list;	// 주문 리스트 [menu_len][2]
+	struct order* next;
 } order;
 
 typedef struct menu{
