@@ -128,6 +128,7 @@ int main(int argc, char** argv){
 
 			// 2) read order from client
 			neworder = malloc(sizeof(order));
+			neworder->list = (int*)malloc(sizeof(int)*mymenu.menu_len);
 			if(orderlist_h == NULL){	// new order
 				orderlist_h = neworder;
 				orderlist_t = neworder;
