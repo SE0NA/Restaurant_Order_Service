@@ -125,7 +125,6 @@ int main(int argc, char** argv){
 			// communication with a client
 			// 1) send menu to client
 			write(client_sock, (void*)&mymenu, sizeof(menu));
-			printf("get order\n");
 
 			// 2) read order from client
 			neworder = (order*)malloc(sizeof(order));
@@ -140,7 +139,7 @@ int main(int argc, char** argv){
 				orderlist_t = neworder;
 			}
 
-			if(n = read(client_sock, neworder, sizeof(order))<0){
+			if(n = read(client_sock, (void*)&neworder, sizeof(order))<0){
 				printf("read 오류!\n");
 				close(client_sock);
 				exit(0);
