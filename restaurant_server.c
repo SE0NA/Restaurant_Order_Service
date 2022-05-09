@@ -102,6 +102,7 @@ int main(int argc, char** argv){
 
 		else if( pid > 0){		// parent process
 			puts("클라이언트 접속으로 child 생성 -> for test\n");
+			printf("pr: %p ", orderlist_h);
 			close(client_sock);
 			continue;
 		}
@@ -132,11 +133,7 @@ int main(int argc, char** argv){
 								
 			neworder->no = ++request_num;
 			
-			ptr = orderlist_h;
-			while(ptr != NULL){
-				printf("%s %s\n\n", ptr->list_str, ptr->name);
-				ptr = ptr->next;
-			}
+			printf("ch: %p ", orderlist_h); 
 			// 3) get order in orderlist
 
 
