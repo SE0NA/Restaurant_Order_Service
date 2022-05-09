@@ -4,7 +4,7 @@
  *  # 서버(식당)가 커져 있어야 클라이언트가 접속이 가능
  *    →  클라이언트 소켓이 종료되더라도 다른 클라이언트의 접속을 받아야 하기 때문에
  *       계속 대기해야 함
- *  
+ * 
  *  1. 클라이언트 연결 -> 메뉴 전송
  *
  *  2. 주문 요청: 클라이언트: 주문 구조체 형태로 전송 →  이를 서버의 주문 내역에 저장.
@@ -22,6 +22,7 @@
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include "struct.h"
 
 #define BUF 1024
 
@@ -36,6 +37,7 @@ int main(int argc, char** argv){
 	int request_num;
 	char[BUF] msg;
 
+	
 	// order list 동적 리스트 필요(order 구조체 작성 완료후)
 
 	if(argc != 2){
