@@ -139,11 +139,14 @@ int main(int argc, char** argv){
 				orderlist_t = neworder;
 			}
 
-			if(n = read(client_sock, (void*)&neworder, sizeof(order))<0){
+			printf("order 생성");
+			if(n = read(client_sock, (void*)neworder, sizeof(order))<0){
 				printf("read 오류!\n");
 				close(client_sock);
 				exit(0);
 			}
+			
+
 			neworder->no = ++request_num;
 			printf("%d %d %s\n", neworder->no, neworder->list[0], neworder->name);
 
