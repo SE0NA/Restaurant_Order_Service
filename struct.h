@@ -8,6 +8,6 @@ typedef struct order{
 
 typedef struct menu{
 	int menu_len;		// 총 메뉴 수
-	int* menu_cose;
+	int* menu_cost;
 	char** menu_str;	// 메뉴 내용
 } menu;

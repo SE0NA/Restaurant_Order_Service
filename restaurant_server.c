@@ -37,7 +37,11 @@ int main(int argc, char** argv){
 	int request_num;
 	char[BUF] msg;
 
-	
+	menu mymenu;
+	mymenu.menu_len = 4;
+
+
+
 	// order list 동적 리스트 필요(order 구조체 작성 완료후)
 
 	if(argc != 2){
