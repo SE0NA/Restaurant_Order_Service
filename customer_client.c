@@ -74,7 +74,7 @@ int main(int argc, char**argv){
 
 	//메뉴 선택 완료
 	//서버로 보내기
-	//write(sock, (void*)&myorder, sizeof(order));
+	write(sock, (void*)&myorder, sizeof(order));
 
 	printf("확인용 : %d %d\n", myorder.list[0], myorder.list[1]);
 	//주문번호 읽기 및 출력
