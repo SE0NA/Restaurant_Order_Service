@@ -59,7 +59,25 @@ int main(int argc, char**argv){
 	//메뉴 읽기
 	str_len = read(sock, (void*)&mymenu, sizeof(menu));
 	printf("%d\n", mymenu.menu_len);
-	// 주문 완료 버튼
+
+	//메뉴 출력
+	//메뉴 선택(쓰기)
+	
+	strcpy(myorder.name,"김예지");
+	strcpy(myorder.phone, "010-0000-0000");
+	strcpy(myorder.add,"수원시");
+	myorder.list = (int*)malloc(sizeof(int)*mymenu.menu_len);
+	for(int i=0;i<mymenu.menu_len;i++)
+		myorder.list[i] = 0;
+	myorder.list[0] = 2;
+	myorder.total = 10000;
+
+	//메뉴 선택 완료
+	//서버로 보내기
+	write(sock, (void*)&myorder, sizeof(order));
+
+	printf("확인용 : %d %d\n", myorder.list[0], myorder.list[1]);
+	//주문번호 읽기 및 출력
 	
 
 
