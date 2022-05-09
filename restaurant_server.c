@@ -74,15 +74,8 @@ int main(int argc, char** argv){
 		mymenu.menu_str[i] = (char*)malloc(sizeof(char)*30);
 
 	// 메뉴 내용 입력
-	mymenu.menu_cost[0] = 15000;
-	mymenu.menu_cost[1] = 12000;
-	mymenu.menu_cost[2] = 13000;
-	mymenu.menu_cost[3] = 9000;
-
-	strcpy(mymenu.menu_str[0], "핫불고기 피자");
-	strcpy(mymenu.menu_str[1], "새우 피자");
-	strcpy(mymenu.menu_str[2], "콤비네이션 피자");
-	strcpy(mymenu.menu_str[3], "예지 피자");
+	strcpy(mymenu.cost_str, "15000@12000@13000@9000");
+	strcpy(mymenu.menu_str, "핫불고기 피자@새우 피자@콤비네이션 피자@예지 피자");
 
 
 	// bind()
@@ -128,7 +121,6 @@ int main(int argc, char** argv){
 
 			// 2) read order from client
 			neworder = malloc(sizeof(order));
-			neworder->list = (int*)malloc(sizeof(int)*mymenu.menu_len);
 			if(orderlist_h == NULL){	// new order
 				orderlist_h = neworder;
 				orderlist_t = neworder;
@@ -142,13 +134,9 @@ int main(int argc, char** argv){
 			}
 
 			n = read(client_sock, neworder, sizeof(order));
-			printf("read\n");
-					
+								
 			neworder->no = ++request_num;
-			printf("%d %s\n", neworder->no, neworder->name);
-			for(int i=0;i<mymenu.menu_len;i++)
-				printf("%d ", neworder->list[i]);
-			printf("\n");
+			printf("%s %s\n\n", neworder->list_str, neworder->name);
 
 			// 3) get order in orderlist
 
