@@ -125,6 +125,7 @@ int main(int argc, char** argv){
 			// communication with a client
 			// 1) send menu to client
 			write(client_sock, (void*)&mymenu, sizeof(menu));
+			printf("get order\n");
 
 			// 2) read order from client
 			neworder = (order*)malloc(sizeof(order));
