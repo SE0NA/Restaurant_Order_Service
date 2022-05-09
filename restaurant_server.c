@@ -33,7 +33,7 @@ int main(int argc, char** argv){
 	struct sockaddr_in client_addr;
 	int client_addr_size;
 
-	int str_len;
+	int n;
 	int request_num;
 	char msg[BUF];
 
@@ -43,6 +43,8 @@ int main(int argc, char** argv){
 	// order
 	order* orderlist_h;
 	order* orderlist_t;
+	order* neworder;
+	orderlist_h = NULL;
 
 	// menu 구조체 데이터 선언
 	menu mymenu;
@@ -125,7 +127,25 @@ int main(int argc, char** argv){
 			write(client_sock, (void*)&mymenu, sizeof(menu));
 
 			// 2) read order from client
-			
+			neworder = (order*)malloc(sizeof(order));
+			if(orderlist_h == NULL){	// new order
+				orderlist_h = neworder;
+				orderlist_t = neworder;
+				orderlist_t->next = NULL;
+				request_num = 0;
+			}
+			else{
+				orderlist_t->next = neworder;
+				orderlist_t = neworder;
+			}
+
+			if(n = read(client_sock, neworder, sizeof(order))<0){
+				printf("read 오류!\n");
+				close(client_sock);
+				exit(0);
+			}
+			neworder->no = ++request_num;
+			printf("%d %d %s\n", neworder->no, neworder->list[0], neworder->name);
 
 			// 3) get order in orderlist
 
