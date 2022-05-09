@@ -127,7 +127,7 @@ int main(int argc, char** argv){
 			write(client_sock, (void*)&mymenu, sizeof(menu));
 
 			// 2) read order from client
-			neworder = (order*)malloc(sizeof(order));
+			neworder = malloc(sizeof(order));
 			if(orderlist_h == NULL){	// new order
 				orderlist_h = neworder;
 				orderlist_t = neworder;
@@ -137,9 +137,10 @@ int main(int argc, char** argv){
 			else{
 				orderlist_t->next = neworder;
 				orderlist_t = neworder;
+				orderlist_t-> next = NULL;
 			}
+			printf("order 생성\n");
 
-			printf("order 생성");
 			if(n = read(client_sock, (void*)neworder, sizeof(order))<0){
 				printf("read 오류!\n");
 				close(client_sock);
