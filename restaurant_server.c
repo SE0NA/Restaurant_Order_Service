@@ -146,6 +146,9 @@ int main(int argc, char** argv){
 					
 			neworder->no = ++request_num;
 			printf("%d %s\n", neworder->no, neworder->name);
+			for(int i=0;i<mymenu.menu_len;i++)
+				printf("%d ", neworder->list[i]);
+			printf("\n");
 
 			// 3) get order in orderlist
 
