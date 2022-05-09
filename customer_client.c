@@ -16,14 +16,10 @@
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include "struct.h"
 
 #define BUF 512
 #define IPserver "127.0.0.1"
-
-
-void InitialScreen();
-void PrintMenu(char*);
-void SelectMenu();
 
 int main(int argc, char**argv){
 	int sock;
@@ -31,8 +27,11 @@ int main(int argc, char**argv){
 
 	int str_len;
 	char msg[BUF];
-	// 주문 전송을 위한 order 구조체 필요: myorder
 	
+	// 주문 전송을 위한 order 구조체 필요: myorder
+	order myorder;
+	menu mymenu;
+
 	if(argc != 2){
 		printf("Usage: %s <port>\n", argv[0]);
 		exit(1);
@@ -47,7 +46,7 @@ int main(int argc, char**argv){
 	
 	memset(&server_addr, 0, sizeof(server_addr));
 	server_addr.sin_family = AF_INET;
-	server_add.sin_addr.s_addr = inet_addr(IPserver);
+	server_addr.sin_addr.s_addr = inet_addr(IPserver);
 	server_addr.sin_port = htons(atoi(argv[1]));
 
 	// connect()
@@ -55,22 +54,29 @@ int main(int argc, char**argv){
 		// server IP는 지정 →  오류가 났다면 서버(식당)이 열리지 않음)
 		// 관련 ui 출력
 		printf("현재는 영업을 하지 않습니다!");
+		exit(1);
 	}
+	//메뉴 읽기
+	str_len = read(sock, (void*)&mymenu, sizeof(menu));
+	printf("%d\n", mymenu.menu_len);
+	// 주문 완료 버튼
+	
+
+
 
 	// connect -> menu를 전송 받음
-	str_len = read(sock, msg, BUF-1);
-	// menu(msg) 출력 ui
-	PrintfMenu(msg);
+	//str_len = read(sock, msg, BUF-1);
+	
 
 	// order 매개변수 입력 필요
-	SelectMenu();	
+		
 
 	// order 전송
 	// write(sock, myorder, sizeof(order));
 	
-	printf("주문 접수 완료!");
+	
 
-	closc(sock);
+	close(sock);
 
-	return 0
+	return 0;
 }
