@@ -45,6 +45,7 @@ int main(int argc, char** argv){
 	order* orderlist_t;
 	order* neworder;
 	orderlist_h = NULL;
+	order* ptr;
 
 	// menu 구조체 데이터 선언
 	menu mymenu;
@@ -130,8 +131,12 @@ int main(int argc, char** argv){
 			n = read(client_sock, neworder, sizeof(order));
 								
 			neworder->no = ++request_num;
-			printf("%s %s\n\n", neworder->list_str, neworder->name);
-
+			
+			ptr = orderlist_h;
+			while(ptr != NULL){
+				printf("%s %s\n\n", ptr->list_str, ptr->name);
+				ptr = ptr->next;
+			}
 			// 3) get order in orderlist
 
 
@@ -140,5 +145,7 @@ int main(int argc, char** argv){
 		
 		// close()
 		close(client_sock);
+
+		// free memory
 	}		
 }
