@@ -170,6 +170,9 @@ int main(int argc, char** argv){
 		        printf(" won\n\n");
 			printf("------------------------------------------------------------------\n");
 			neworder.total = total;
+
+			// 4) return this order information to client
+			write(client_sock, (void*)&neworder, sizeof(order));
 		}
 		
 		// close()
