@@ -64,19 +64,46 @@ int main(int argc, char**argv){
 	printf("%s\n%s\n", mymenu.cost_str, mymenu.menu_str);
 
 	//메뉴 선택(쓰기)
-	strcpy(myorder.name,"김예지");
+	printf("이름: ");
+	fgets(msg, sizeof(msg), stdin);
+	msg[strlen(msg)-1] = 0;
+	strcpy(myorder.name, msg);
+
+	printf("전화번호: ");
+	fgets(msg, sizeof(msg), stdin);
+	msg[strlen(msg)-1] = 0;
+	strcpy(myorder.phone, msg);
+
+	printf("주소: ");
+	fgets(msg, sizeof(msg), stdin);
+	msg[strlen(msg)-1] = 0;
+	strcpy(myorder.addr, msg);
+
+	printf("주문(n@n@n@n): ");
+	fgets(msg, sizeof(msg), stdin);
+	msg[strlen(msg)-1] = 0;
+	strcpy(myorder.list_str, msg);
+	
+	printf("총액: ");
+	fgets(msg, sizeof(msg), stdin);
+	msg[strlen(msg)-1] = 0;
+	myorder.total = atoi(msg);
+	/*
 	strcpy(myorder.phone, "010-0000-0000");
 	strcpy(myorder.addr, "수원시");
 	strcpy(myorder.list_str, "1@3@0@0");
-	myorder.total = 10000;
+	myorder.total = 10000;*/
+
 
 	//메뉴 선택 완료
 	//서버로 보내기
 	write(sock, (void*)&myorder, sizeof(order));
 
-	//주문번호 읽기 및 출력
-	
+	// 서버로부터 주문 내역반환 받음
+	str_len = read(sock, (void*)&myorder, sizeof(order));
 
+	printf("주문 내역: \n");
+	printf(" %s\n %s\n %s\n %s\n", myorder.name, myorder.phone, myorder.addr, myorder.ordertime);
 
 
 	// connect -> menu를 전송 받음
