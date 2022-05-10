@@ -143,6 +143,7 @@ int main(int argc, char** argv){
 			ptr = orderlist_h->next;
 			while(ptr != NULL){
 				printf("%d %s %s\n", ptr->no, ptr->name, ptr->list_str);
+				ptr = ptr->next;
 			}
 
 			// 3) get order in orderlist
