@@ -109,14 +109,12 @@ int main(int argc, char** argv){
 		}
 
 		else if( pid > 0){		// parent process
-			puts("클라이언트 접속으로 child 생성 -> for test\n");
 			close(client_sock);
 			continue;
 		}
 
 		else{				// child process
 			close(server_sock);
-			puts(" ** child process\n");
 
 			// communication with a client
 			// 1) send menu to client
@@ -142,6 +140,7 @@ int main(int argc, char** argv){
 			
 			ptr = orderlist_h->next;
 			while(ptr != NULL){
+				printf("%p  : ", orderlist_h->next);
 				printf("%d %s %s\n", ptr->no, ptr->name, ptr->list_str);
 				ptr = ptr->next;
 			}
