@@ -104,15 +104,16 @@ int main(int argc, char** argv){
 		// fork()
 		if((pid = fork())<0){		// fork error
 			close(client_sock);
-			if(request_num == 1){
-				emptyorder.next = NULL;
-				request_num++;
-			}
 			continue;
 		}
 
 		else if( pid > 0){		// parent process
 			close(client_sock);
+			if(request_num==1){
+				printf("parent\n");
+				orderlist_h->next = NULL;
+				request_num++;
+			}
 			continue;
 		}
 
