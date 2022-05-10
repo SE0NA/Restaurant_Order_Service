@@ -57,9 +57,7 @@ int main(int argc, char** argv){
 
 	// order orderlist_h 주소 값 지정
 	orderlist_h = &emptyorder;
-	orderlist_h->next = NULL;
 
-	printf("test *** ");
 	if(argc != 2){
 		printf("Usage: %s <port>\n", argv[0]);
 		exit(1);
@@ -111,6 +109,8 @@ int main(int argc, char** argv){
 
 		else if( pid > 0){		// parent process
 			close(client_sock);
+			if(request_num == 1)
+				orderlist_h->next = NULL;
 			continue;
 		}
 
