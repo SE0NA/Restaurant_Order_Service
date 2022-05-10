@@ -123,9 +123,11 @@ int main(int argc, char** argv){
 			// 2) read order from client
 			neworder = malloc(sizeof(order));
 			if(orderlist_h->next == NULL){	// new order
+				printf("new ");
 				orderlist_h->next = neworder;
 			}
 			else{
+				printf("next ");
 				ptr = orderlist_h->next;
 				while(ptr->next != NULL){
 					request_num++;
@@ -138,7 +140,7 @@ int main(int argc, char** argv){
 
 			n = read(client_sock, neworder, sizeof(order));
 								
-			neworder->no = ++request_num;
+			neworder->no = request_num;
 			
 			ptr = orderlist_h->next;
 			while(ptr != NULL){
