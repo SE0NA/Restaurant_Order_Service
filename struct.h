@@ -3,9 +3,9 @@ typedef struct order{
 	char name[20];	// 주문자 이름(클라이언트)
 	char phone[20];	// 주문자 휴대번호(클라이언트)
 	char addr[20];	// 주문 배송지(클라이언트)
-	char list_str[256];
+	char list_str[100];
 	int total;
-	time_t ordertime;
+	char ordertime[50];
 	struct order* next;
 } order;
 

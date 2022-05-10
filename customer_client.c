@@ -66,7 +66,7 @@ int main(int argc, char**argv){
 	//메뉴 선택(쓰기)
 	strcpy(myorder.name,"김예지");
 	strcpy(myorder.phone, "010-0000-0000");
-	strcpy(myorder.add,"수원시");
+	strcpy(myorder.addr, "수원시");
 	strcpy(myorder.list_str, "1@3@0@0");
 	myorder.total = 10000;
 
