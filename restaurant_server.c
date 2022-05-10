@@ -37,7 +37,7 @@ int main(int argc, char** argv){
 	int client_addr_size;
 
 	int n;
-	int request_num = 1;
+	int request_num = 0;
 	char msg[BUF];
 
 	pid_t pid;
@@ -109,8 +109,9 @@ int main(int argc, char** argv){
 
 		else if( pid > 0){		// parent process
 			close(client_sock);
-			if(request_num == 1)
+			if(request_num == 0)
 				orderlist_h->next = NULL;
+			request_num++;
 			continue;
 		}
 
@@ -124,11 +125,13 @@ int main(int argc, char** argv){
 			// 2) read order from client
 			neworder = malloc(sizeof(order));
 			if(orderlist_h->next == NULL){	// new order
+				printf("new ");
 				orderlist_h->next = neworder;
 			}
 			else{
+				printf("next ");
 				ptr = orderlist_h->next;
-				while(ptr->next != NULL){
+				while(ptr != NULL){
 					request_num++;
 					ptr = ptr->next;
 				}
