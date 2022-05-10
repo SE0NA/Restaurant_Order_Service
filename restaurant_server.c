@@ -110,7 +110,6 @@ int main(int argc, char** argv){
 		else if( pid > 0){		// parent process
 			close(client_sock);
 			if(request_num==1){
-				printf("parent\n");
 				orderlist_h->next = NULL;
 				request_num++;
 			}
@@ -127,9 +126,9 @@ int main(int argc, char** argv){
 			// 2) read order from client
 			neworder = malloc(sizeof(order));
 			if(orderlist_h->next == NULL){	// new order
-				printf("new ");
 				orderlist_h->next = neworder;
 				neworder->next = NULL;
+				printf("next %p  : ", neworder);
 			}
 			else{
 				printf("next ");
@@ -149,7 +148,7 @@ int main(int argc, char** argv){
 			
 			ptr = orderlist_h->next;
 			while(ptr != NULL){
-				printf("%p  : ", orderlist_h->next);
+				printf("%p  %p  : ", orderlist_h->next, ptr);
 				printf("%d %s %s\n", ptr->no, ptr->name, ptr->list_str);
 				ptr = ptr->next;
 			}
