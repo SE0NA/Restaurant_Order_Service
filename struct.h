@@ -5,6 +5,7 @@ typedef struct order{
 	char addr[20];	// 주문 배송지(클라이언트)
 	char list_str[256];
 	int total;
+	time_t ordertime;
 	struct order* next;
 } order;
 
@@ -12,5 +13,4 @@ typedef struct menu{
 	int menu_len;		// 총 메뉴 수
 	char cost_str[256];
 	char menu_str[254];
-	int* menu_cost;
 } menu;

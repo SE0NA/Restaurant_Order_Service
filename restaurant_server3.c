@@ -1,5 +1,5 @@
 /* 
- *  파일명: restaurant_server.c
+ *  파일명: restaurant_server_nothing.c
  *  
  *  # 서버(식당)가 커져 있어야 클라이언트가 접속이 가능
  *    →  클라이언트 소켓이 종료되더라도 다른 클라이언트의 접속을 받아야 하기 때문에
@@ -10,8 +10,7 @@
  *  2. 주문 요청: 클라이언트: 주문 구조체 형태로 전송 →  이를 서버의 주문 내역에 저장.
  *                  서버: 클라이언트에게 주문이 완료됨을 전송(문자열)
  *  
- *  3. 공유메모리를 이용하여 부모 프로세스와 자식프로세스가 주문 내역 리스트와 requset_num을 공유하도록 함
- *
+ * 
  *   +) 다중 사용자 접속이 가능하도록 하여야 함!
  */
 
@@ -19,21 +18,17 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <time.h>
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <sys/shm.h>	// 공유 메모리
-#include <sys/ipc.h>
 #include "struct.h"
 
 #define BUF 1024
 
 #define COST_STR "15000@12000@13000@9000"
 #define MENU_STR "핫불고기 피자@콤비네이션 피자@새우 피자@기본 피자"
-
-#define MEM_KEY 9999	// 공유메모리 사용을 위한 키
-#define MEM_SIZE 1024	// 공유 메모리 사이즈
-#define RAND_DISTANCE 5		
+#define MENU_LEN 4
 
 int main(int argc, char** argv){
 	int server_sock;
@@ -43,22 +38,22 @@ int main(int argc, char** argv){
 	int client_addr_size;
 
 	int n;
-	int request_num;
+	int request_num = 1;
 	char msg[BUF];
+	char *str;
 
 	pid_t pid;
 	int state;
 
-	// 공유 메모리: order
-	int shmid;
-	void *shm_addr;
-	order* orderlist_h;
-	order* orderlist_t;
-	order *ptr, *next;
+	// order
+	order neworder;
+	int orderlist[MENU_LEN] = {0};
+	char* menulist[MENU_LEN][2];
+	int total = 0;
 
 	// menu 구조체 데이터 선언
 	menu mymenu;
-	mymenu.menu_len = 4;
+	mymenu.menu_len = MENU_LEN;
 
 	if(argc != 2){
 		printf("Usage: %s <port>\n", argv[0]);
@@ -81,12 +76,22 @@ int main(int argc, char** argv){
 	strcpy(mymenu.cost_str, COST_STR);
 	strcpy(mymenu.menu_str, MENU_STR);
 
-	// 공유 메모리 설정
-	if((shmid = shmget((key_t)MEM_KEY, MEM_SIZE, IPC_CREAT|0666))==-1) return -1;
-	if((shm_addr = shmat(shmid, NULL, 0)) == (void*)-1) return -1;
-
+	// 메뉴 이름
+	strcpy(msg, MENU_STR);
+	str = strtok(msg, "@");
+	strcpy(menulist[0][0], str);
+	for(int i=1;i<MENU_LEN;i++){
+		str = strtok(NULL, "@");
+		strcpy(menulist[i][0], str);
+	}
+	strcpy(msg, COST_STR);
+	str = strtok(msg, "@");
+	strcpy(menulist[0][1], str);
+	for(int i=1;i<MENU_LEN;i++){
+		str = strtok(NULL, "@");
+		strcpy(menulist[i][1], str);
+	}
 	
-
 	// bind()
 	if(bind(server_sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0){
 		perror("socket bind error\n");
@@ -116,10 +121,6 @@ int main(int argc, char** argv){
 
 		else if( pid > 0){		// parent process
 			close(client_sock);
-			if(request_num == 0){
-				orderlist_h = NULL;
-				orderlist_t = NULL;
-			}
 			continue;
 		}
 
@@ -131,48 +132,39 @@ int main(int argc, char** argv){
 			write(client_sock, (void*)&mymenu, sizeof(menu));
 
 			// 2) read order from client
-			order *neworder = (order)malloc(sizeof(order));
-			if(orderlist_h == NULL){	// first order
-				orderlist_h = neworder;
-				orderlist_t = neworder;
-				neworder->next = NULL;
-				request_num=0;
-				printf("h:%p t:%p  : ", orderlist_h, orderlist_t);
-			}
-			else{				// rest orders
-				printf("next ");
-				orderlist_t->next = neworder;
-				orderlist_t = neworder;
-				neworder->next = NULL;
-				printf("next - h:%p t:%p  : ", orderlist_h, orderlist_t);
-			}
+			n = read(client_sock, (void*)&neworder, sizeof(order));
+			neworder.ordertime = time(NULL);	// 주문 시간
+			neworder.total = 0;
 
-			n = read(client_sock, neworder, sizeof(order));
-								
-			neworder->no = ++request_num;
-			
-			ptr = orderlist_h;
-			while(ptr != NULL){
-				printf("%p  %p  : ", orderlist_h->next, ptr);
-				printf("%d %s %s\n", ptr->no, ptr->name, ptr->list_str);
-				ptr = ptr->next;
+			// 3) print UI with new orderlist
+			printf("%c[1;33m", 27);		// 글자색: 노랑
+			printf("*** new! ***\n");
+			printf("%c[0m\n", 27);		// 글자색 리셋
+			printf("	%s (%s) - %s\n", neworder.name, neworder.phone, neworder.addr);
+		
+			strcpy(msg, neworder.list_str);
+			msg[sizeof(msg)-1] = 0;
+			str = strtok(msg, "@");
+			orderlist[0] = atoi(str);
+			for(int i=1;i<MENU_LEN;i++){
+				str = strtok(NULL, "@");
+				orderlist[i] = atoi(str);
 			}
-
-			// 3) get order in orderlist
-			
-			
-			// 4) print UI with new orderlist
+			for(int i=0;i<MENU_LEN;i++){	// 메뉴 출력
+				if(orderlist[i]!=0){
+					printf("		%s		%d	%d won\n",
+						menulist[i][0], orderlist[i], atoi(menulist[i][1])*orderlist[i] );
+					total += atoi(menulist[i][1])*orderlist[i];
+				}
+			}
+			printf("			total: %d won\n\n", total);
+			printf("------------------------------------------------------\n");
+			neworder.total = total;
 		}
 		
 		// close()
 		close(client_sock);
-
-		// free memory
-		ptr = orderlist_h->next;
-		while(ptr != NULL){
-			next = ptr->next;
-			free(ptr);
-			ptr = next;
-		}
-	}		
+		return 0;
+	}
+	
 }
