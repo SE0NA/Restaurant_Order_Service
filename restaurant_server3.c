@@ -91,7 +91,14 @@ int main(int argc, char** argv){
 		str = strtok(NULL, "@");
 		strcpy(menulist[i][1], str);
 	}
-	
+
+	// menu 내용 확인용
+	for(int i=0;i<MENU_LEN;i++){
+		printf("%s(%s) ", menulist[i][0], menulist[i][1]);
+	}
+	printf("\n");
+
+
 	// bind()
 	if(bind(server_sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0){
 		perror("socket bind error\n");
