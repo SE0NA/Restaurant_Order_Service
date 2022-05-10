@@ -59,6 +59,7 @@ int main(int argc, char** argv){
 	orderlist_h = &emptyorder;
 	orderlist_h->next = NULL;
 
+	printf("test *** ");
 	if(argc != 2){
 		printf("Usage: %s <port>\n", argv[0]);
 		exit(1);
@@ -123,11 +124,9 @@ int main(int argc, char** argv){
 			// 2) read order from client
 			neworder = malloc(sizeof(order));
 			if(orderlist_h->next == NULL){	// new order
-				printf("new ");
 				orderlist_h->next = neworder;
 			}
 			else{
-				printf("next ");
 				ptr = orderlist_h->next;
 				while(ptr->next != NULL){
 					request_num++;
