@@ -26,6 +26,9 @@
 
 #define BUF 1024
 
+#define COST_STR "15000@12000@13000@9000"
+#define MENU_STR "핫불고기 피자@콤비네이션 피자@새우 피자@기본 피자"
+
 int main(int argc, char** argv){
 	int server_sock;
 	int client_sock;
@@ -43,13 +46,18 @@ int main(int argc, char** argv){
 	// order
 	order* orderlist_h;
 	order* orderlist_t;
+	order emptyorder;
 	order* neworder;
-	orderlist_h = NULL;
 	order* ptr;
+	order* next;
 
 	// menu 구조체 데이터 선언
 	menu mymenu;
 	mymenu.menu_len = 4;
+
+	// order orderlist_h 주소 값 지정
+	orderlist_h = &emptyorder;
+	orderlist_h->next = NULL;
 
 	if(argc != 2){
 		printf("Usage: %s <port>\n", argv[0]);
@@ -69,8 +77,8 @@ int main(int argc, char** argv){
 	server_addr.sin_port = htons(atoi(argv[1]));
 
 	// 메뉴 내용 입력
-	strcpy(mymenu.cost_str, "15000@12000@13000@9000");
-	strcpy(mymenu.menu_str, "핫불고기 피자@새우 피자@콤비네이션 피자@예지 피자");
+	strcpy(mymenu.cost_str, COST_STR);
+	strcpy(mymenu.menu_str, MENU_STR);
 
 
 	// bind()
@@ -102,7 +110,6 @@ int main(int argc, char** argv){
 
 		else if( pid > 0){		// parent process
 			puts("클라이언트 접속으로 child 생성 -> for test\n");
-			printf("pr: %p ", orderlist_h);
 			close(client_sock);
 			continue;
 		}
@@ -117,8 +124,8 @@ int main(int argc, char** argv){
 
 			// 2) read order from client
 			neworder = malloc(sizeof(order));
-			if(orderlist_h == NULL){	// new order
-				orderlist_h = neworder;
+			if(orderlist_h->next == NULL){	// new order
+				orderlist_h->next = neworder;
 				orderlist_t = neworder;
 				orderlist_t->next = NULL;
 				request_num = 0;
@@ -133,10 +140,14 @@ int main(int argc, char** argv){
 								
 			neworder->no = ++request_num;
 			
-			printf("ch: %p ", orderlist_h); 
+			ptr = orderlist_h->next;
+			while(ptr != NULL){
+				printf("%d %s %s\n", ptr->no, ptr->name, ptr->list_str);
+			}
+
 			// 3) get order in orderlist
-
-
+			
+			
 			// 4) print UI with new orderlist
 		}
 		
@@ -144,5 +155,11 @@ int main(int argc, char** argv){
 		close(client_sock);
 
 		// free memory
+		ptr = orderlist_h->next;
+		while(ptr != NULL){
+			next = ptr->next;
+			free(ptr);
+			ptr = next;
+		}
 	}		
 }
