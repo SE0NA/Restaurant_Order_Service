@@ -37,7 +37,7 @@ int main(int argc, char** argv){
 	int client_addr_size;
 
 	int n;
-	int request_num = 0;
+	int request_num = 1;
 	char msg[BUF];
 
 	pid_t pid;
@@ -57,6 +57,7 @@ int main(int argc, char** argv){
 
 	// order orderlist_h 주소 값 지정
 	orderlist_h = &emptyorder;
+	emptyorder.next = NULL;
 
 	if(argc != 2){
 		printf("Usage: %s <port>\n", argv[0]);
@@ -109,9 +110,6 @@ int main(int argc, char** argv){
 
 		else if( pid > 0){		// parent process
 			close(client_sock);
-			if(request_num == 0)
-				orderlist_h->next = NULL;
-			request_num++;
 			continue;
 		}
 
@@ -127,6 +125,7 @@ int main(int argc, char** argv){
 			if(orderlist_h->next == NULL){	// new order
 				printf("new ");
 				orderlist_h->next = neworder;
+				neworder->next = NULL;
 			}
 			else{
 				printf("next ");
