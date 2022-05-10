@@ -57,7 +57,6 @@ int main(int argc, char** argv){
 
 	// order orderlist_h 주소 값 지정
 	orderlist_h = &emptyorder;
-	emptyorder.next = NULL;
 
 	if(argc != 2){
 		printf("Usage: %s <port>\n", argv[0]);
@@ -105,6 +104,10 @@ int main(int argc, char** argv){
 		// fork()
 		if((pid = fork())<0){		// fork error
 			close(client_sock);
+			if(request_num == 1){
+				emptyorder.next = NULL;
+				request_num++;
+			}
 			continue;
 		}
 
