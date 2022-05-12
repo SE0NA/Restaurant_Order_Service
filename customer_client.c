@@ -202,22 +202,23 @@ void inputOrderlist(order* myorder, menu* mymenu){
 					total += cost_list[row];
 				}
 				break;
-		//	case 10:
-		//		break;
+			case 32:	// space
+				if(total > 0){
+					// 주문 정보 정리
+					sprintf(str, "%d", order_list[0]);
+					for(int i=1;i<mymenu->menu_len;i++){
+						sprintf(str2, "@%d", order_list[i]);
+						strcat(str, str2);
+					}
+					strcpy(myorder->list_str, str);
+					myorder->total = total;
+					return;
+				}
+				break;
 			default:
 				break;
 		}
 	}
-/*
-	// 주문 정보 정리
-	sprintf(str, "%d", order_list[0]);
-	for(int i=1;i<mymenu->menu_len;i++){
-		sprintf(str2, "@%d", order_list[i]);
-		strcat(str, str2);
-	}
-	strcpy(myorder->list_str, str);
-	myorder->total = total;
-*/
 }
 
 // 주문자 정보 입력
