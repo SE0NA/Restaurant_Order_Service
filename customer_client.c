@@ -23,8 +23,11 @@
 #define IPserver "127.0.0.1"
 
 void inputOrderlist(order*, menu*);
-void inputCustomerInformation(order*);
+void inputCustomerInformation(order*, int);
 int getkey();
+
+char** menu_list;
+int* cost_list, *order_list;
 
 int main(int argc, char**argv){
 	int sock;
@@ -67,26 +70,9 @@ int main(int argc, char**argv){
 	
 	//메뉴 선택
 	inputOrderlist(&myorder, &mymenu);
-	printf("%s\n\n", myorder.list_str);
-
 	
-	// 임시
-	printf("이름: ");
-        fgets(msg, sizeof(msg), stdin);
-        msg[strlen(msg)-1] = 0;
-        strcpy(myorder.name, msg);
-
-        printf("전화번호: ");
-        fgets(msg, sizeof(msg), stdin);
-        msg[strlen(msg)-1] = 0;
-        strcpy(myorder.phone, msg);
-
-        printf("주소: ");
-        fgets(msg, sizeof(msg), stdin);
-        msg[strlen(msg)-1] = 0;
-        strcpy(myorder.addr, msg);
-
-
+	// 주문자 정보 입력
+	inputCustomerInformation(&myorder, mymenu.menu_len);
 
 
 	//서버로 보내기
@@ -116,8 +102,7 @@ int main(int argc, char**argv){
 
 // 메뉴 수량 입력(방향키)
 void inputOrderlist(order* myorder, menu* mymenu){
-	char **menu_list, *str, *str2;
-	int *cost_list, *order_list;
+	char *str, *str2;
 	int total = 0, row = 0, len, tab_len, k=0, max_len=0;
 	char key=0;
 	
@@ -222,8 +207,32 @@ void inputOrderlist(order* myorder, menu* mymenu){
 }
 
 // 주문자 정보 입력
-void inputCustomerInformation(order* myorder){
-
+void inputCustomerInformation(order* myorder, int menu_len){
+	char str[50];
+	// print 주문 정보
+	system("clear");
+	printf("+------------------------------------+\n");
+	printf("|                주문\n");
+	for(int i=0;i<menu_len;i++)
+		if(order_list[i]!=0)
+			printf("| %s  ... x%d  - %d won\n", menu_list[i], order_list[i], cost_list[i]*order_list[i]);
+	printf("+------------------------------------+\n\n");
+	
+	// 주문자 정보 입력
+	printf(" 주문자 이름: ");
+	fgets(str, sizeof(str), stdin);
+	str[strlen(str)-1] = 0;
+	strcpy(myorder->name, str);
+	
+	printf(" 휴대폰 번호: ");
+        fgets(str, sizeof(str), stdin);
+        str[strlen(str)-1] = 0;
+        strcpy(myorder->phone, str);
+	
+	printf(" 배송지: ");
+        fgets(str, sizeof(str), stdin);
+        str[strlen(str)-1] = 0;
+        strcpy(myorder->addr, str);
 }
 
 int getkey(){
