@@ -276,17 +276,18 @@ void orderPrint(order* myorder, int menu_len){
 	printf("%c[0m",27);
 	printf("│\n");
 	printf("├---------------------------------------------------┤\n");
-	PrintArea(myorder->name, 50);
-	PrintArea(myorder->phone, 50);
-	PrintArea(myorder->addr, 50);	
+	PrintArea(myorder->ordertime, 48);
+	PrintArea(myorder->name, 48);
+	PrintArea(myorder->phone, 48);
+	PrintArea(myorder->addr, 48);	
 	printf("├---------------------------------------------------│\n");
-	for(int i=0;i<menu_len;i++){
+/*	for(int i=0;i<menu_len;i++){
 		if(order_list[i] != 0){
 			sprintf(tmp, "%s ... %2d - %6d won", menu_list[i], order_list[i], cost_list[i]*order_list[i]);
-		//	PrintArea(tmp, 50);
+			PrintArea(tmp, 48);
 		}
 	}
-	printf("├---------------------------------------------------│\n");
+*/	printf("├---------------------------------------------------│\n");
 	printf("│ total: %10d won                             │\n", myorder->total);
 	printf("└───────────────────────────────────────────────────┘\n");
 }
