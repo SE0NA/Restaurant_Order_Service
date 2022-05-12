@@ -266,13 +266,13 @@ void PrintArea(unsigned char *info_string, int space_count){
 
 void orderPrint(order* myorder, int menu_len){
 	int space_count = 54, k=0;
-	char *tmp;
+	char tmp[200];
 
 	system("clear");
 	printf("\n\n┌───────────────────────────────────────────────────┐\n");
 	printf("│");
 	printf("%c[1;33m", 27);
-	printf("     *** 주문 완료***                              ");
+	printf("                  *** 주문 완료***                 ");
 	printf("%c[0m",27);
 	printf("│\n");
 	printf("├---------------------------------------------------┤\n");
@@ -281,13 +281,13 @@ void orderPrint(order* myorder, int menu_len){
 	PrintArea(myorder->phone, 48);
 	PrintArea(myorder->addr, 48);	
 	printf("├---------------------------------------------------│\n");
-/*	for(int i=0;i<menu_len;i++){
+	for(int i=0;i<menu_len;i++){
 		if(order_list[i] != 0){
 			sprintf(tmp, "%s ... %2d - %6d won", menu_list[i], order_list[i], cost_list[i]*order_list[i]);
 			PrintArea(tmp, 48);
 		}
 	}
-*/	printf("├---------------------------------------------------│\n");
+	printf("├---------------------------------------------------│\n");
 	printf("│ total: %10d won                             │\n", myorder->total);
 	printf("└───────────────────────────────────────────────────┘\n");
 }
