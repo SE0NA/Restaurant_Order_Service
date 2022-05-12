@@ -49,7 +49,6 @@ int main(int argc, char** argv){
 	order neworder;
 	int orderlist[MENU_LEN] = {0};
 	char menulist[MENU_LEN][2][30];
-	int total = 0;
 	struct tm *t;
 	time_t timer;
 
@@ -168,7 +167,6 @@ int main(int argc, char** argv){
 			printf("%c[0m", 27);
 		        printf(" won\n\n");
 			printf("------------------------------------------------------------------\n");
-			neworder.total = total;
 
 			// 4) return this order information to client
 			write(client_sock, (void*)&neworder, sizeof(order));
