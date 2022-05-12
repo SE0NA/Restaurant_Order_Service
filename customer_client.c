@@ -25,6 +25,7 @@
 void inputOrderlist(order*, menu*);
 void inputCustomerInformation(order*, int);
 int getkey();
+void orderPrint(order*, int);
 
 char** menu_list;
 int* cost_list, *order_list;
@@ -74,28 +75,19 @@ int main(int argc, char**argv){
 	// 주문자 정보 입력
 	inputCustomerInformation(&myorder, mymenu.menu_len);
 
-
 	//서버로 보내기
 	write(sock, (void*)&myorder, sizeof(order));
 
 	// 서버로부터 주문 내역반환 받음
 	str_len = read(sock, (void*)&myorder, sizeof(order));
 
-	printf("주문 내역: \n");
-	printf(" %s\n %s\n %s\n %s\n", myorder.name, myorder.phone, myorder.addr, myorder.ordertime);
-
-
-	// connect -> menu를 전송 받음
-	//str_len = read(sock, msg, BUF-1);
-	
-	
-
-	// order 전송
-	// write(sock, myorder, sizeof(order));
-	
+	// 완료된 주문 정보 출력
+	orderPrint(&myorder, mymenu.menu_len);
 	
 
 	close(sock);
+
+	// free memory
 
 	return 0;
 }
@@ -208,31 +200,34 @@ void inputOrderlist(order* myorder, menu* mymenu){
 
 // 주문자 정보 입력
 void inputCustomerInformation(order* myorder, int menu_len){
-	char str[50];
+	int space_count = 30;
+	char str[100];
+
 	// print 주문 정보
 	system("clear");
-	printf("+------------------------------------+\n");
+	printf("+-----------------------------------------+\n");
 	printf("|                주문\n");
+	printf("+-----------------------------------------+\n");
 	for(int i=0;i<menu_len;i++)
 		if(order_list[i]!=0)
 			printf("| %s  ... x%d  - %d won\n", menu_list[i], order_list[i], cost_list[i]*order_list[i]);
-	printf("+------------------------------------+\n\n");
+	printf("+-----------------------------------------+\n\n");
 	
 	// 주문자 정보 입력
-	printf(" 주문자 이름: ");
+	printf("\n 주문자 이름: ");
 	fgets(str, sizeof(str), stdin);
 	str[strlen(str)-1] = 0;
-	strcpy(myorder->name, str);
-	
-	printf(" 휴대폰 번호: ");
+	strcpy(myorder->name, str);	
+
+	printf("\n 휴대폰 번호: ");
         fgets(str, sizeof(str), stdin);
-        str[strlen(str)-1] = 0;
-        strcpy(myorder->phone, str);
+	str[strlen(str)-1] = 0;
+	strcpy(myorder->phone, str);
 	
-	printf(" 배송지: ");
-        fgets(str, sizeof(str), stdin);
-        str[strlen(str)-1] = 0;
-        strcpy(myorder->addr, str);
+	printf("\n 배송지: ");
+	fgets(str, sizeof(str), stdin);
+	str[strlen(str)-1]=0;
+	strcpy(myorder->addr, str);
 }
 
 int getkey(){
@@ -249,4 +244,34 @@ int getkey(){
 	ch = getchar();
 	tcsetattr(0, TCSANOW, &old);
 	return ch;
+}
+
+void orderPrint(order* myorder, int menu_len){
+	int space_count = 54, k=0;
+	
+	system("clear");
+	printf("\n\n┌───────────────────────────────────────────────────\n");
+	printf("│");
+	printf("%c[1;33m", 27);
+	printf("     *** 주문 완료***                              ");
+	printf("%c[0m",27);
+	printf("\n");
+	printf("├---------------------------------------------------\n");
+	printf("│ - %s \n", myorder->ordertime);
+	if(strlen(myorder->name)%2==0)
+		k=1;
+	printf("│ - %s \n", myorder->name);
+	if(strlen(myorder->phone)%2!=0)
+		k=0;
+	printf("│ - %s \n", myorder->phone);
+	printf("│ - %s\n", myorder->addr);
+	printf("├---------------------------------------------------\n");
+	for(int i=0;i<menu_len;i++){
+		if(order_list[i] != 0){
+			printf("│ %s ... %2d  - %6d won \n", menu_list[i], order_list[i], cost_list[i]*order_list[i]);
+		}
+	}
+	printf("├---------------------------------------------------\n");
+	printf("│ total: %10d won                             \n", myorder->total);
+	printf("└───────────────────────────────────────────────────\n");
 }
