@@ -118,7 +118,7 @@ int main(int argc, char**argv){
 void inputOrderlist(order* myorder, menu* mymenu){
 	char **menu_list, *str, *str2;
 	int *cost_list, *order_list;
-	int total = 0, row = 0;
+	int total = 0, row = 0, len, tab_len, k=0, max_len=0;
 	char key=0;
 	
 	// 메뉴 내용 저장을 위한 메모리 동적할당
@@ -136,6 +136,8 @@ void inputOrderlist(order* myorder, menu* mymenu){
 	for(int i=1;i<mymenu->menu_len;i++){
 		str = strtok(NULL, "@");
 		strcpy(menu_list[i], str);
+		if(max_len < strlen(menu_list[i]))
+			max_len = strlen(menu_list[i]);
 	}
 	str = strtok(mymenu->cost_str, "@");	// 메뉴 가격
 	cost_list[0] = atoi(str);
@@ -149,15 +151,22 @@ void inputOrderlist(order* myorder, menu* mymenu){
 		printf("+-------------------------------------------------------------------+\n");
 		for(int i=0;i<mymenu->menu_len;i++){	// 메뉴 출력
 			printf("| ");
+			len = strlen(menu_list[i]);
 			if(row == i){	// 현재 선택된 메뉴
 				printf("%c[1;33m", 27);	// 글자색 변경-> 노랑
-				printf("%s\t\t%d won\t\t", menu_list[i], cost_list[i]);
+				printf("%s", menu_list[i]);
+				for(int i=len; i<max_len; i++)
+					printf(" ");
+				printf("\t\t%d won\t", cost_list[i]);
 				printf("%c[1;36m", 27);	// 글자색 변경 -> 밝은 파랑
 				printf("◀  %2d ▶   ", order_list[i]);
 				printf("%c[0m", 27);	// 글자색 원래대로
 			}
 			else{
-				printf("%s\t\t%d won\t", menu_list[i], cost_list[i]);
+				printf("%s", menu_list[i]);
+				for(int i=len; i<max_len;i++)
+					printf(" ");
+				printf("\t\t%d won\t", cost_list[i]);
 				if(order_list[i] == 0)
 					printf("          ");
 				else
