@@ -25,6 +25,8 @@
 void inputOrderlist(order*, menu*);
 void inputCustomerInformation(order*, int);
 int getkey();
+void MiddleLine(unsigned char*, int);
+void PrintArea(unsigned char *, int);
 void orderPrint(order*, int);
 
 char** menu_list;
@@ -246,32 +248,45 @@ int getkey(){
 	return ch;
 }
 
+void MiddleLine(unsigned char *info_string, int space_count){
+	printf("│  %-*s │\n", space_count, info_string);
+}
+void PrintArea(unsigned char *info_string, int space_count){
+	if(*info_string > 127){
+		MiddleLine("", space_count);
+		MiddleLine(info_string, space_count+3);
+		MiddleLine("", space_count);
+	}
+	else{
+		MiddleLine("", space_count);
+		MiddleLine(info_string, space_count);
+		MiddleLine("", space_count);
+	}
+}
+
 void orderPrint(order* myorder, int menu_len){
 	int space_count = 54, k=0;
-	
+	char *tmp;
+
 	system("clear");
-	printf("\n\n┌───────────────────────────────────────────────────\n");
+	printf("\n\n┌───────────────────────────────────────────────────┐\n");
 	printf("│");
 	printf("%c[1;33m", 27);
 	printf("     *** 주문 완료***                              ");
 	printf("%c[0m",27);
-	printf("\n");
-	printf("├---------------------------------------------------\n");
-	printf("│ - %s \n", myorder->ordertime);
-	if(strlen(myorder->name)%2==0)
-		k=1;
-	printf("│ - %s \n", myorder->name);
-	if(strlen(myorder->phone)%2!=0)
-		k=0;
-	printf("│ - %s \n", myorder->phone);
-	printf("│ - %s\n", myorder->addr);
-	printf("├---------------------------------------------------\n");
+	printf("│\n");
+	printf("├---------------------------------------------------┤\n");
+	PrintArea(myorder->name, 50);
+	PrintArea(myorder->phone, 50);
+	PrintArea(myorder->addr, 50);	
+	printf("├---------------------------------------------------│\n");
 	for(int i=0;i<menu_len;i++){
 		if(order_list[i] != 0){
-			printf("│ %s ... %2d  - %6d won \n", menu_list[i], order_list[i], cost_list[i]*order_list[i]);
+			sprintf(tmp, "%s ... %2d - %6d won", menu_list[i], order_list[i], cost_list[i]*order_list[i]);
+		//	PrintArea(tmp, 50);
 		}
 	}
-	printf("├---------------------------------------------------\n");
-	printf("│ total: %10d won                             \n", myorder->total);
-	printf("└───────────────────────────────────────────────────\n");
+	printf("├---------------------------------------------------│\n");
+	printf("│ total: %10d won                             │\n", myorder->total);
+	printf("└───────────────────────────────────────────────────┘\n");
 }
