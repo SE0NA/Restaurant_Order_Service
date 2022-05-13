@@ -255,12 +255,10 @@ void PrintArea(unsigned char *info_string, int space_count){
 	if(*info_string > 127){
 		MiddleLine("", space_count);
 		MiddleLine(info_string, space_count+3);
-		MiddleLine("", space_count);
 	}
 	else{
 		MiddleLine("", space_count);
 		MiddleLine(info_string, space_count);
-		MiddleLine("", space_count);
 	}
 }
 
@@ -280,14 +278,14 @@ void orderPrint(order* myorder, int menu_len){
 	PrintArea(myorder->name, 48);
 	PrintArea(myorder->phone, 48);
 	PrintArea(myorder->addr, 48);	
-	printf("├---------------------------------------------------│\n");
+	printf("\n├---------------------------------------------------│\n");
 	for(int i=0;i<menu_len;i++){
 		if(order_list[i] != 0){
 			sprintf(tmp, "%s ... %2d - %6d won", menu_list[i], order_list[i], cost_list[i]*order_list[i]);
 			PrintArea(tmp, 48);
 		}
 	}
-	printf("├---------------------------------------------------│\n");
+	printf("\n├---------------------------------------------------│\n");
 	printf("│ total: %10d won                             │\n", myorder->total);
 	printf("└───────────────────────────────────────────────────┘\n");
 }
