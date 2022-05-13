@@ -252,15 +252,18 @@ void MiddleLine(unsigned char *info_string, int space_count){
 	printf("│  %-*s │\n", space_count, info_string);
 }
 void PrintArea(unsigned char *info_string, int space_count){
-	if(*info_string > 127){
-		MiddleLine("", space_count);
-		MiddleLine(info_string, space_count+3);
+	int i, len=0;
+	for(i=0;i<strlen(info_string);){
+		if(info_string[i] & 0x80){
+			len++;
+			i = i+3;
+		}
+		else
+			i++;
 	}
-	else{
-		MiddleLine("", space_count);
-		MiddleLine(info_string, space_count);
-	}
+
 	MiddleLine("", space_count);
+	MiddleLine(info_string, space_count+len);
 }
 
 void orderPrint(order* myorder, int menu_len){
