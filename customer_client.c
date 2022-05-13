@@ -96,7 +96,7 @@ int main(int argc, char**argv){
 
 // 메뉴 수량 입력(방향키)
 void inputOrderlist(order* myorder, menu* mymenu){
-	char *str, *str2;
+	char *str, *str2, str3[100], str4[100];
 	int total = 0, row = 0, len, tab_len, k=0, max_len=0;
 	char key=0;
 	
@@ -184,12 +184,12 @@ void inputOrderlist(order* myorder, menu* mymenu){
 			case 32:	// space
 				if(total > 0){
 					// 주문 정보 정리
-					sprintf(str, "%d", order_list[0]);
+					sprintf(str3, "%d", order_list[0]);
 					for(int i=1;i<mymenu->menu_len;i++){
-						sprintf(str2, "@%d", order_list[i]);
-						strcat(str, str2);
+						sprintf(str4, "@%d", order_list[i]);
+						strcat(str3, str4);
 					}
-					strcpy(myorder->list_str, str);
+					strcpy(myorder->list_str, str3);
 					myorder->total = total;
 					return;
 				}
