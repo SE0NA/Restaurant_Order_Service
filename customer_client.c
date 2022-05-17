@@ -20,7 +20,7 @@
 #include "struct.h"
 
 #define BUF 512
-#define IPserver "127.0.0.1"
+#define IPserver "220.69.209.200"
 
 void inputOrderlist(order*, menu*);
 void inputCustomerInformation(order*, int);
