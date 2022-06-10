@@ -1,4 +1,5 @@
-/*  파일명: customer_clinet.c
+/*  
+ *  ** 클라이언트 코드 **
  *  
  *  주문자(client)는 식당(server)으로 주문 정보를 전송(order 구조체)
  *  
